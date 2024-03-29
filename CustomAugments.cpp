@@ -257,6 +257,41 @@ std::map<std::string, int> CustomAugmentManager::CheckHiddenAugments(const std::
     return newList;
 }
 
+std::vector<std::string> CustomAugmentManager::GetAugmentFromList(const std::vector<std::string>& augList)
+{
+    auto newList = std::vector<std::string>();
+
+    for (auto i = 0; i < augList.size(); ++i)
+    {
+        hs_log_file("Aug/List: %s\n", augList[i].c_str());
+
+        std::vector<std::string> tempList = G_->GetBlueprints()->GetBlueprintList(augList[i]);
+
+        if (!(tempList.empty())) hs_log_file("Aug List:\n");
+        for (const auto& item : tempList) {
+            hs_log_file("Element: %s\n", item.c_str());
+        }
+
+        if (tempList.empty())
+        {
+            newList.push_back(augList[i]);
+
+            hs_log_file("No list!\nReturned: %s\n", augList[i].c_str());
+        }
+        else
+        {
+            int randomAug = std::rand() % tempList.size();
+            std::string augFromList = tempList[randomAug];
+
+            newList.push_back(augFromList);
+
+            hs_log_file("Is list!\nReturned: %s\n", augFromList.c_str());
+        }
+    }
+
+    return newList;
+}
+
 std::vector<std::string> CustomAugmentManager::RemoveHiddenAugments(const std::vector<std::string>& augList)
 {
     auto newList = std::vector<std::string>();
@@ -674,12 +709,67 @@ HOOK_METHOD_PRIORITY(ShipManager, ImportShip, 100, (int fileHelper) -> void)
     CustomAugmentManager::GetInstance()->UpdateAugments(iShipId);
 }
 
+/* attempted rewrite - unfinished
+HOOK_METHOD_PRIORITY(AugmentEquipBox, CheckContents, () -> void)
+{
+    LOG_HOOK("HOOK_METHOD_PRIORITY -> AugmentEquipBox::CheckContents -> Begin (CustomAugments.cpp)\n")
+    hs_log_file("AugmentEquipBox::CheckContents");
+
+    if (ship != nullptr) 
+    {
+        std::vector<std::string> augsList;
+
+        GetAugmentationList(ship);
+
+        int slot = GetEquipmentBoxSlot(ship);
+        if (slot < augsList.size())
+        {
+            std::string augmentName = augsList[slot];
+            AugmentBlueprint *aug = G_->GetBlueprints()->GetAugmentBlueprint(augmentName);
+            SetEquipmentBoxAugment(ship, pAVar6);
+        }
+        else
+        {
+            SetEquipmentBoxAugment(ship, nullptr);
+        }
+        for (auto& augment : augsList)
+        {
+            if (!augment.empty())
+            {
+                augment.clear();
+            }
+        }
+        if (!augsList.empty())
+        {
+            augsList.clear();
+        }
+    }
+}
+*/
+
 HOOK_METHOD(ShipObject, GetAugmentationList, () -> std::vector<std::string>)
 {
     LOG_HOOK("HOOK_METHOD -> ShipObject::GetAugmentationList -> Begin (CustomAugments.cpp)\n")
     std::vector<std::string> vec = super();
+    hs_log_file("Original list:\n");
+    for (const auto& item : vec)
+    {
+        hs_log_file("%s\n", item.c_str());
+    }
+
+    vec = CustomAugmentManager::GetAugmentFromList(vec);
+    hs_log_file("Modified list:\n");
+    for (const auto& item : vec)
+    {
+        hs_log_file("%s\n", item.c_str());
+    }
 
     vec = CustomAugmentManager::RemoveHiddenAugments(vec);
+    hs_log_file("No-Hidden list:\n");
+    for (const auto& item : vec)
+    {
+        hs_log_file("%s\n", item.c_str());
+    }
 
     return vec;
 }

@@ -80,6 +80,7 @@ public:
 
     static std::map<std::string, int> CheckHiddenAugments(const std::map<std::string, int>& augList);
     static std::vector<std::string> RemoveHiddenAugments(const std::vector<std::string>& augList);
+    static std::vector<std::string> GetAugmentFromList(const std::vector<std::string>& augList);
     std::unordered_map<std::string, int>* GetShipAugments(int iShipId);
     std::vector<ShipIcon*>& GetAugIconList(int iShipId)
     {
