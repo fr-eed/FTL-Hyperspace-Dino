@@ -28,6 +28,14 @@ HOOK_METHOD(CrewEquipBox, RemoveItem, () -> int)
 }
 
 
+// Disabled Ship glow resulting in using the ships_noglow directory
+
+HOOK_METHOD(ResourceControl, ShipGlow, () -> bool)
+{
+    LOG_HOOK("HOOK_METHOD -> ResourceControl::ShipGlow -> Begin (Misc.cpp)\n")
+    return false;
+}
+
 
 // Doesn't do anything, but I usually use this to test random stuff by changing what the numpad buttons do
 
