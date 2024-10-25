@@ -1,0 +1,7 @@
+struct MedbaySystem
+{{
+	MedbaySystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(5, roomId, shipId, startingPower);
+	}
+}};

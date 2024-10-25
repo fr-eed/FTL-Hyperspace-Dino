@@ -219,4 +219,6 @@ struct ShipManager depends (PowerManager, ShieldPower)
 		return std::pair<int, int>(powerMan->currentPower.second, powerMan->currentPower.second - powerMan->currentPower.first);
 	}
 
+	int AddSystem_Rewrite(int sysId);
+
 }};

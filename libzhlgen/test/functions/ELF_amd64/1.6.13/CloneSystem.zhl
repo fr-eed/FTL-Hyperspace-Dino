@@ -1,2 +1,13 @@
 "415741564155415455534889fb4881ec88010000":
 cleanup __amd64 void CloneSystem::OnLoop(CloneSystem *this);
+".534889fb4883ec20e853110100488d8388020000":
+cleanup __amd64 void CloneSystem::constructor(CloneSystem *this, int systemId, int roomId, int shipId, int starting_power);
+
+
+struct CloneSystem
+{{
+	CloneSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(13, roomId, shipId, startingPower);
+	}
+}};

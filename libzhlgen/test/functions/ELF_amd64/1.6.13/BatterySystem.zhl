@@ -1,0 +1,11 @@
+"534889fb4883ec10e8f3210100":
+cleanup __amd64 void BatterySystem::constructor(BatterySystem *this, int systemId, int roomId, int shipId, int starting_power);
+
+
+struct BatterySystem
+{{
+	BatterySystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(12, roomId, shipId, startingPower);
+	}
+}};

@@ -4,3 +4,14 @@ cleanup __amd64 void HackingSystem::BlowHackingDrone(HackingSystem *this);
 cleanup __amd64 void HackingSystem::OnLoop(HackingSystem *this);
 "5380bf44020000004889fb75??31c05bc30f1f8000000000e8????????83f8ff":
 cleanup __amd64 bool HackingSystem::SoundLoop(HackingSystem *this);
+"41545589d5534889fb4c8da3480200004883ec20":
+cleanup __amd64 void HackingSystem::constructor(HackingSystem *this, int systemId, int roomId, int shipId, int starting_power);
+
+
+struct HackingSystem
+{{
+	HackingSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(15, roomId, shipId, startingPower);
+	}
+}};

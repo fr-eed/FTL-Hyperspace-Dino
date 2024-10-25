@@ -26,3 +26,12 @@ cleanup __amd64 bool TeleportSystem::CanReceive(TeleportSystem *this);
 cleanup __amd64 void TeleportSystem::OnLoop(TeleportSystem *this);
 ".534889fb4883ec20":
 cleanup __amd64 void TeleportSystem::InitiateTeleport(TeleportSystem *this);
+
+
+struct TeleportSystem
+{{
+	TeleportSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(9, roomId, shipId, startingPower);
+	}
+}};

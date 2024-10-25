@@ -1,4 +1,15 @@
-"55534889fb4883ec08e8????????488dbb68020000":
-cleanup __amd64 void CloakingSystem::OnLoop(CloakingSystem *this);
-"534889fbbe????????4883ec30488d54241e":
+"!534889fb4883ec20e8c31701000f57c0488dbb60020000":
+cleanup __amd64 void CloakingSystem::constructor(CloakingSystem *this, int systemId ,int roomId, int shipId, int starting_power);
+".534889fbbe????????4883ec30488d54241e":
 cleanup __amd64 void CloakingSystem::FiredWeapon(CloakingSystem *this);
+".55534889fb4883ec08e8????????488dbb68020000":
+cleanup __amd64 void CloakingSystem::OnLoop(CloakingSystem *this);
+
+
+struct CloakingSystem
+{{
+	CloakingSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(10, roomId, shipId, startingPower);
+	}
+}};

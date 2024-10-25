@@ -1177,6 +1177,7 @@ struct ShipObject
 	void CheckCargo(const std::string& equip, int& ret);
 
 	LIBZHL_API bool AddAugmentation(const std::string &augment);
+	LIBZHL_API void AddEquipment(const std::string &blueprintId);
 	LIBZHL_API void ClearShipInfo();
 	LIBZHL_API int GetAugmentationCount();
 	LIBZHL_API std::vector<std::string> GetAugmentationList();
@@ -1291,6 +1292,7 @@ struct LIBZHL_INTERFACE ShipSystem
 	LIBZHL_API static int __stdcall RenderPowerBoxesPlain(int x, int y, int width, int height, int gap, int current, int temp, int max);
 	LIBZHL_API void RenderSystemSymbol(bool forPowerUI, int forceColor);
 	LIBZHL_API void SaveState(int file);
+	LIBZHL_API void __stdcall SetFloorImage(const std::string &name);
 	LIBZHL_API void SetPowerCap(int cap);
 	LIBZHL_API int SetPowerLoss(int power);
 	LIBZHL_API static std::string __stdcall SystemIdToName(int systemId);
@@ -1372,8 +1374,14 @@ struct Targetable;
 
 struct ArtillerySystem : ShipSystem
 {
+	ArtillerySystem(WeaponBlueprint& weapon, int roomId, int shipId, int startingPower)
+	{
+		this->constructor(weapon, roomId, shipId, startingPower);
+	}
+
 	LIBZHL_API void Jump();
 	LIBZHL_API void OnLoop();
+	LIBZHL_API void constructor(WeaponBlueprint &weapBlueprint, int roomId, int shipId, int starting_power);
 	
 	ProjectileFactory *projectileFactory;
 	Targetable *target;
@@ -1977,6 +1985,13 @@ struct BatteryBox : CooldownSystemBox
 
 struct BatterySystem : ShipSystem
 {
+	BatterySystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(12, roomId, shipId, startingPower);
+	}
+
+	LIBZHL_API void constructor(int systemId, int roomId, int shipId, int starting_power);
+	
 	bool bTurnedOn;
 	TimerHelper timer;
 	std::string soundeffect;
@@ -3827,8 +3842,14 @@ struct CloakingBox : CooldownSystemBox
 
 struct CloakingSystem : ShipSystem
 {
+	CloakingSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(10, roomId, shipId, startingPower);
+	}
+
 	LIBZHL_API void FiredWeapon();
 	LIBZHL_API void OnLoop();
+	LIBZHL_API void constructor(int systemId, int roomId, int shipId, int starting_power);
 	
 	bool bTurnedOn;
 	TimerHelper timer;
@@ -3861,7 +3882,13 @@ struct CloneBox : CooldownSystemBox
 
 struct CloneSystem : ShipSystem
 {
+	CloneSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(13, roomId, shipId, startingPower);
+	}
+
 	LIBZHL_API void OnLoop();
+	LIBZHL_API void constructor(int systemId, int roomId, int shipId, int starting_power);
 	
 	float fTimeToClone;
 	CrewMember *clone;
@@ -5223,6 +5250,11 @@ struct DroneStoreBox : StoreBox
 
 struct DroneSystem : ShipSystem
 {
+	DroneSystem(int roomId, int shipId, int startingPower, int slotCount)
+	{
+		this->constructor(roomId, shipId, startingPower, slotCount);
+	}
+
 	LIBZHL_API bool DePowerDrone(Drone *drone, bool unk);
 	LIBZHL_API void Jump();
 	LIBZHL_API void OnLoop();
@@ -5230,6 +5262,7 @@ struct DroneSystem : ShipSystem
 	LIBZHL_API virtual void SetBonusPower(int amount, int permanentPower);
 	LIBZHL_API static int __stdcall StringToDrone(std::string &name);
 	LIBZHL_API void UpdateBonusPower();
+	LIBZHL_API void constructor(int roomId, int shipId, int starting_power, int slot_count);
 	
 	std::vector<Drone*> drones;
 	int drone_count;
@@ -5400,6 +5433,11 @@ struct EngiAnimation
 
 struct EngineSystem
 {
+	EngineSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(1, roomId, shipId, startingPower);
+	}
+
 };
 
 struct EventDamage
@@ -5900,9 +5938,15 @@ struct HackingDrone : SpaceDrone
 
 struct HackingSystem : ShipSystem
 {
+	HackingSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(15, roomId, shipId, startingPower);
+	}
+
 	LIBZHL_API void BlowHackingDrone();
 	LIBZHL_API void OnLoop();
 	LIBZHL_API bool SoundLoop();
+	LIBZHL_API void constructor(int systemId, int roomId, int shipId, int starting_power);
 	
 	bool bHacking;
 	HackingDrone drone;
@@ -6066,6 +6110,11 @@ struct MantisAnimation : CrewAnimation
 
 struct MedbaySystem
 {
+	MedbaySystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(5, roomId, shipId, startingPower);
+	}
+
 };
 
 struct MemoryInputEvent
@@ -6094,11 +6143,17 @@ struct MindBox : CooldownSystemBox
 
 struct MindSystem : ShipSystem
 {
+	MindSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(14, roomId, shipId, startingPower);
+	}
+
 	LIBZHL_API void InitiateMindControl();
 	LIBZHL_API void OnLoop();
 	LIBZHL_API void ReleaseCrew();
 	LIBZHL_API void SetArmed(int armed);
 	LIBZHL_API void SetHackingLevel(int hackingLevel);
+	LIBZHL_API void constructor(int systemId, int roomId, int shipId, int starting_power);
 	
 	std::pair<float, float> controlTimer;
 	bool bCanUse;
@@ -6205,6 +6260,11 @@ struct OxygenSystem;
 
 struct OxygenSystem : ShipSystem
 {
+	OxygenSystem(int numRooms, int roomId, int shipId, int startingPower)
+	{
+		this->constructor(numRooms, roomId, shipId, startingPower);
+	}
+
 	LIBZHL_API void ComputeAirLoss(int roomId, float value, bool unk);
 	LIBZHL_API void EmptyOxygen(int roomId);
 	LIBZHL_API float GetRefillSpeed();
@@ -6689,6 +6749,7 @@ struct Shields : ShipSystem
 		int damage;
 	};
 	
+	LIBZHL_API void AddDamage(int amount);
 	LIBZHL_API void AddSuperShield(Point pos);
 	LIBZHL_API CollisionResponse CollisionReal(float x, float y, Damage damage, bool force);
 	LIBZHL_API CollisionResponse CollisionTest(float x, float y, Damage damage);
@@ -6760,6 +6821,7 @@ struct Ship : ShipObject
 	LIBZHL_API void BreachSpecificHull(int grid_x, int grid_y);
 	LIBZHL_API bool DestroyedDone();
 	LIBZHL_API int EmptySlots(int roomId);
+	LIBZHL_API void FillRoomSlot(int slotId, int roomId, bool intruder);
 	LIBZHL_API bool FullRoom(int roomId, bool intruder);
 	LIBZHL_API int GetAvailableRoom(int preferred, bool intruder);
 	LIBZHL_API int GetAvailableRoomSlot(int roomId, bool intruder);
@@ -6909,6 +6971,8 @@ struct ShipManager : ShipObject
 		
 		return std::pair<int, int>(powerMan->currentPower.second, powerMan->currentPower.second - powerMan->currentPower.first);
 	}
+
+	int AddSystem_Rewrite(int sysId);
 
 
 	LIBZHL_API void AddCrewMember(CrewMember *crew, int roomId);
@@ -7567,6 +7631,11 @@ struct TeleportBox : SystemBox
 
 struct TeleportSystem : ShipSystem
 {
+	TeleportSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(9, roomId, shipId, startingPower);
+	}
+
 	LIBZHL_API bool CanReceive();
 	LIBZHL_API bool CanSend();
 	LIBZHL_API bool Charged();
@@ -7728,9 +7797,16 @@ struct WeaponStoreBox : StoreBox
 
 struct WeaponSystem : ShipSystem
 {
+	WeaponSystem(int roomId, int shipId, int startingPower, int slotCount)
+	{
+		this->constructor(roomId, shipId, startingPower, slotCount);
+	}
+
 	LIBZHL_API void OnLoop();
 	LIBZHL_API void RemoveWeapon(int slot);
 	LIBZHL_API virtual void SetBonusPower(int amount, int permanentPower);
+	LIBZHL_API void SetCloakingSystem(CloakingSystem &cloaking);
+	LIBZHL_API void constructor(int roomId, int shipId, int starting_power, int slot_count);
 	
 	Pointf target;
 	std::vector<ProjectileFactory*> weapons;

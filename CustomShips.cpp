@@ -183,6 +183,215 @@ HOOK_METHOD(ShipManager, AddSystem, (int systemId) -> int)
     return ret;
 }
 
+int ShipManager::AddSystem_Rewrite(int sysId) 
+{
+     // Initial variable declarations
+    int initialPowerLevel = 1;  // Minimum default power level
+    int roomId;                   // Room ID for the system
+    std::string systemName;       // Name for the system
+    int powerLevel, systemMaxLevel; // System power levels
+    int systemId;
+
+    // Check if the system ID exists in the blueprint
+    auto it = this->myBlueprint.systemInfo.find(sysId);
+    if (it == this->myBlueprint.systemInfo.end()) return 0;
+
+    // Retrieve system information from the blueprint
+    const auto& sysInfo = it->second;
+    sysInfo.systemId;
+    sysInfo.powerLevel;
+    sysInfo.location;
+    sysInfo.bp;
+    sysInfo.maxPower;
+    sysInfo.image;
+    sysInfo.slot;
+    sysInfo.direction;
+    sysInfo.weapon;
+
+    // Calculate initial power level for the system
+    if (sysInfo.powerLevel > 0) initialPowerLevel = sysInfo.powerLevel;
+
+    // Get room ID from the system location
+    roomId = sysInfo.location[0];
+
+    // Convert system ID to name
+    const std::string sysBlueprint = ShipSystem::SystemIdToName(systemId);
+    ShipObject::AddEquipment(&sysBlueprint);
+
+    // Add to system blueprints if it doesn't already exist
+    if (G_->GetBlueprints()->systemBlueprints.count(systemName) == 0) 
+    {
+        G_->GetBlueprints()->systemBlueprints.emplace(systemName, newSystem);
+    }
+    auto systemInfoIterator = this->myBlueprint.systemInfo.find(sysId);
+    if (systemInfoIterator == this->myBlueprint.systemInfo.end()) {
+        return 0; // System nicht gefunden
+    }
+
+    systemMaxLevel = G_->GetBlueprints()->systemBlueprints[systemName].maxLevel;
+    powerLevel = std::min(initialPowerLevel + this->shipLevel, systemMaxLevel) - sysInfo.powerLevel;
+
+    ShipSystem *newSystem;
+    // System creation based on the ID
+    switch (systemId) 
+    {
+        case 0: // Shields System
+        {
+            Shields *shieldSystemNew = shieldSystem;
+            while (shieldSystemNew->powerState.second < initialPowerLevel) 
+            {
+                shieldSystemNew->UpgradeSystem(1);
+            }
+            shieldSystemNew->AddDamage(0);
+            shieldSystemNew->IncreasePower(1, false);
+            newSystem = shieldSystemNew;
+            break;
+        }
+        case 1: // Engine System
+        {
+            EngineSystem *engineSystemNew = new EngineSystem(roomId, iShipId, initialPowerLevel);
+            engineSystem = engineSystemNew;
+            newSystem = engineSystemNew;
+            break;
+        }
+        case 2: // Oxygen System
+        {
+            OxygenSystem *oxygenSystemNew = new OxygenSystem(this->ship.vRoomList.size(), roomId, iShipId, initialPowerLevel);
+            oxygenSystem = oxygenSystemNew;
+            newSystem = oxygenSystemNew;
+            break;
+        }
+        case 3: // Weapon System
+        {
+            WeaponSystem *weaponSystemNew = new WeaponSystem(roomId, iShipId, initialPowerLevel, this->myBlueprint.weaponSlots);
+            weaponSystem = weaponSystemNew;
+            weaponSystem->missile_count = tempMissileCount;
+            tempMissileCount = 0;
+            weaponSystem->SetCloakingSystem(*cloakSystem);
+            newSystem = weaponSystemNew;
+            break;
+        }
+        case 4: // Drone System
+        {
+            DroneSystem *droneSystemNew = new DroneSystem(roomId, iShipId, initialPowerLevel, this->myBlueprint.droneSlots);
+            droneSystem = droneSystemNew;
+            droneSystem->drone_count = tempDroneCount;
+            tempDroneCount = 0;
+            newSystem = droneSystemNew;
+            break;
+        }
+        case 5: // Medbay System
+        {
+            MedbaySystem *medbaySystemNew = new MedbaySystem(roomId, iShipId, initialPowerLevel);
+            medbaySystem = medbaySystemNew;
+            newSystem = medbaySystemNew;
+            break;
+        }
+        case 9: // Teleport System
+        case 10: // Cloaking System
+        {
+            CloakingSystem *cloakSystemNew = new CloakingSystem(roomId, iShipId, initialPowerLevel);
+            cloakSystem = cloakSystemNew;
+            weaponSystem->SetCloakingSystem(*cloakSystem);
+            newSystem = cloakSystemNew;
+            break;
+        }
+        case 11: // Artillery System
+        {
+            auto weapon = sysInfo.weapon[artillerySystems.size()];
+            WeaponBlueprint *weapBlueprint = G_->GetBlueprints()->GetWeaponBlueprint(weapon);
+            ArtillerySystem *artillerySystemNew = new ArtillerySystem(*weapBlueprint, roomId, iShipId, initialPowerLevel);
+            artillerySystems.push_back(artillerySystemNew);
+            AddEquipment(weapon);
+            newSystem = artillerySystemNew;
+            break;
+        }
+        case 12: // Battery System
+        {
+            BatterySystem *batterySystemNew = new BatterySystem(roomId, iShipId, initialPowerLevel);
+            batterySystem = batterySystemNew;
+            newSystem = batterySystemNew;
+            break;
+        }
+        case 13: // Clonebay System
+        {
+            CloneSystem *cloneSystemNew = new CloneSystem(roomId, iShipId, initialPowerLevel);
+            cloneSystem = cloneSystemNew;
+            newSystem = cloneSystemNew;
+            break;
+        }
+        case 14: // Mind System
+        {
+            MindSystem *mindSystemNew = new MindSystem(roomId, iShipId, initialPowerLevel);
+            mindSystem = mindSystemNew;
+            newSystem = mindSystemNew;
+            break;
+        }
+        case 15: // Hacking System
+        {
+            HackingSystem *hackingSystemNew = new HackingSystem(roomId, iShipId, initialPowerLevel);
+            hackingSystem = hackingSystemNew;
+            newSystem = hackingSystemNew;
+            break;
+        }/*
+        case 20: // Temporal System
+        {
+            TemporalSystem *temporalSystemNew = new TemporalSystem(roomId, iShipId, initialPowerLevel);
+            newSystem = temporalSystemNew;
+            break;
+        }*/
+        /*
+        case 6: // Pilot System
+        case 7: // Sensor System
+        case 8: // Door System
+        */
+        default: // Syb Systems
+        {
+            ShipSystem *sybSystem = new ShipSystem(systemId, roomId, iShipId, initialPowerLevel);
+            newSystem = sybSystem;
+            break;
+        }
+    }
+    vSystemList.push_back(newSystem);
+
+    Ship *shipInstance = &this->ship;
+    // Handle crew members and slots for the new system
+    if (systemId == 5 && iShipId == 0) 
+    {
+        shipInstance->EmptySlots(roomId);
+        // Temporary storage for crew members
+        std::vector<CrewMember*> tempCrew;
+
+        for (auto &crew : this->vCrewList) 
+        {
+            if (crew->currentSlot.roomId == roomId) 
+            {
+                crew->EmptySlot();
+                tempCrew.push_back(crew);
+            }
+        }
+
+        // Fill the room with crew members
+        for (auto &crew : tempCrew) 
+        {
+            shipInstance->FillRoomSlot(roomId, roomId, false);
+            shipInstance->FillRoomSlot(roomId, roomId, true);
+        }
+    }
+
+    // Set additional properties
+    newSystem->bpCost = sysInfo.bp;
+    newSystem->SetFloorImage(sysInfo.image);
+    newSystem->maxLevel = (sysInfo.maxPower >= -1) ? sysInfo.maxPower : 0;
+
+    // Handle instant power shield case
+    if (systemId == 0) 
+    {
+        InstantPowerShields();
+    }
+    
+    return powerLevel;
+}
 
 HOOK_METHOD_PRIORITY(ShipManager, OnInit, 100, (ShipBlueprint *bp, int shipLevel) -> int)
 {

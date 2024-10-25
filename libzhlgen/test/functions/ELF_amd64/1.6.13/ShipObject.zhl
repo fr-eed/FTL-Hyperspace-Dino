@@ -14,6 +14,8 @@ cleanup __amd64 float ShipObject::GetAugmentationValue(ShipObject *this, const s
 cleanup __amd64 bool ShipObject::AddAugmentation(ShipObject *this, const std::string& augment);
 ".415741564155415455534889fb4883ec48488d7c2420":
 cleanup __amd64 void ShipObject::RemoveAugmentation(ShipObject *this, const std::string& augment);
+".415741564155415455534889fb4883ec38488d7c2420":
+cleanup __amd64 void ShipObject::AddEquipment(ShipObject *this, const std::string& blueprintId);
 
 "!8b570831c0488b0d(???????\?)85d20f94c0488d14004801c2":
 offsetVariable ShipInfo** Global_ShipObject_ShipInfoList;

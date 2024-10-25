@@ -1,3 +1,5 @@
+"!4156415541544589c44189c889d189f2be????????55":
+cleanup __amd64 void DroneSystem::constructor(DroneSystem *this, int roomId, int shipId, int starting_power, int slot_count);
 "415484d24989f4554889fd53":
 cleanup __amd64 bool DroneSystem::DePowerDrone(DroneSystem *this, Drone *drone, bool unk);
 ".415431c94989fc":
@@ -12,3 +14,12 @@ cleanup __amd64 void DroneSystem::UpdateBonusPower(DroneSystem *this);
 cleanup __amd64 void DroneSystem::OnLoop(DroneSystem *this);
 ".5589f5534889fb4883ec08":
 virtual cleanup __amd64 void DroneSystem::SetBonusPower(DroneSystem *this, int amount, int permanentPower);
+
+
+struct DroneSystem
+{{
+	DroneSystem(int roomId, int shipId, int startingPower, int slotCount)
+	{
+		this->constructor(roomId, shipId, startingPower, slotCount);
+	}
+}};

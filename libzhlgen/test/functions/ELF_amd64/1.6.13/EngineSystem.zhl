@@ -1,0 +1,7 @@
+struct EngineSystem
+{{
+	EngineSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(1, roomId, shipId, startingPower);
+	}
+}};

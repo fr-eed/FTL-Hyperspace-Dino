@@ -24,6 +24,8 @@ cleanup __amd64 void Ship::SetSelectedRoom(Ship *this, int roomId);
 cleanup __amd64 void Ship::SetRoomBlackout(Ship *this, int roomId, bool blackout);
 "!.4863c60fb6f2":
 cleanup __amd64 int Ship::GetAvailableRoomSlot(Ship *this, int roomId, bool intruder);
+"!.4863c20fb6d1488b4f10488b3cc1e90da1ffff":
+cleanup __amd64 void Ship::FillRoomSlot(Ship *this, int slotId, int roomId, bool intruder);
 ".41544863f64c8d24f500000000554889fd":
 cleanup __amd64 int Ship::EmptySlots(Ship *this, int roomId);
 ".488b4f10488b47184829c848c1f80339c6":

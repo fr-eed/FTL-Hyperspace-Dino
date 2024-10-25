@@ -162,6 +162,26 @@ bool CommandConsole::RunCommand(CommandGui *commandGui, const std::string& cmd)
         }
         return true;
     }
+    if (cmdName == "SYSDINO")
+    {
+        if (command.length() == 7)
+        {
+            return false;
+        }
+        else
+        {
+            try
+            {
+                int8_t sysId = boost::lexical_cast<int>(boost::trim_copy(command.substr(8)));
+                commandGui->shipComplete->shipManager->AddSystem(sysId);
+            }
+            catch (boost::bad_lexical_cast const &e)
+            {
+                printf("boost::bad_lexical_cast in RunCommand SYSDINO\n");
+            }
+        }
+        return true;
+    }
     if (cmdName == "DAMAGESYS" && command.length() > 9)
     {
         ShipSystem* sys = commandGui->shipComplete->shipManager->GetSystem(ShipSystem::NameToSystemId(boost::trim_copy(command.substr(10))));

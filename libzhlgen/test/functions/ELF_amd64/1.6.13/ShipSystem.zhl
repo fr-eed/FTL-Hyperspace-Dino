@@ -100,6 +100,8 @@ static cleanup __amd64 int ShipSystem::NameToSystemId(const std::string& name);
 static cleanup __amd64 std::string ShipSystem::SystemIdToName(int systemId);
 ".4156415541544189d455534889fb4881ec10020000":
 static cleanup __amd64 std::string ShipSystem::GetLevelDescription(int systemId, int level, bool tooltip);
+".4157415641554154554889f5534883ec48":
+cleanup __amd64 void ShipSystem::SetFloorImage(const std::string& name);
 ".41574989ff41564189f641554589c54154555389d389ca4881ecd8010000":
 cleanup __amd64 void ShipSystem::constructor(ShipSystem *this, int systemId, int roomId, int shipId, int startingPower);
 

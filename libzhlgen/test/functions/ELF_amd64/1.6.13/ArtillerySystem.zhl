@@ -1,4 +1,15 @@
 "488b8748020000c7400c00000000":
 cleanup __amd64 void ArtillerySystem::Jump(ArtillerySystem *this);
+".41554989f5be0b00000041545589cd534889fb4883ec08e844290100":
+cleanup __amd64 void ArtillerySystem::constructor(ArtillerySystem *this, WeaponBlueprint& weapBlueprint, int roomId, int shipId, int starting_power);
 ".415455534889fb4883ec70e8????????4889df":
 cleanup __amd64 void ArtillerySystem::OnLoop(ArtillerySystem *this);
+
+
+struct ArtillerySystem
+{{
+	ArtillerySystem(WeaponBlueprint& weapon, int roomId, int shipId, int startingPower)
+	{
+		this->constructor(weapon, roomId, shipId, startingPower);
+	}
+}};

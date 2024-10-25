@@ -1,3 +1,5 @@
+"534889fbe897c30000f30f1005":
+cleanup __amd64 void MindSystem::constructor(MindSystem *this, int systemId, int roomId, int shipId, int starting_power);
 "41554989fd415455534883ec28488b8f":
 cleanup __amd64 void MindSystem::ReleaseCrew(MindSystem *this);
 ".5589f553??89fb??83ec08":
@@ -8,3 +10,12 @@ cleanup __amd64 void MindSystem::SetArmed(MindSystem *this, int armed);
 cleanup __amd64 void MindSystem::InitiateMindControl(MindSystem *this);
 ".415455534889fb4883ec20e8????????488b8380020000":
 cleanup __amd64 void MindSystem::OnLoop(MindSystem *this);
+
+
+struct MindSystem
+{{
+	MindSystem(int roomId, int shipId, int startingPower)
+	{
+		this->constructor(14, roomId, shipId, startingPower);
+	}
+}};
