@@ -1,0 +1,32 @@
+name: 'Release macOS'
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-macos:
+    runs-on: macos-15
+    steps:
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup macOS build environment
+        run: buildscripts/ci/setup-macos.sh
+
+      - name: Build all macOS variants release only
+        run: buildscripts/buildall-darwin-release-only.sh
+
+      - name: Package macOS
+        run: buildscripts/ci/package-macos.sh ${{ steps.version.outputs.version }}
+
+      - name: Upload macOS release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: FTL.Hyperspace.${{ steps.version.outputs.version }}-MacOS.zip
+          tag_name: v${{ steps.version.outputs.version }}

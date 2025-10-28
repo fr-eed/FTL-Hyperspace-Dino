@@ -1,0 +1,47 @@
+name: 'Prepare Release'
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.20.1)'
+        required: true
+        default: '1.x.x'
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Bump version
+        run: |
+          git config --global user.email "ftl-hyperspace@github.com"
+          git config --global user.name "FTL Hyperspace"
+          buildscripts/ci/bump-version.sh ${{ inputs.version }}
+          git commit -a -m "Bump version to ${{ inputs.version }}"
+
+      - name: Push changes and create tag
+        run: |
+          git push origin master:master
+          git tag v${{ inputs.version }} master
+          git push origin v${{ inputs.version }}
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ inputs.version }}
+          name: ${{ inputs.version }}
+          draft: true
+          generate_release_notes: true
+          body: |
+            ## Download Instructions
+            - **All Platforms**: Download `FTL.Hyperspace.${{ inputs.version }}-All.zip` (includes everything)
+            - **Linux Only**: Download `FTL.Hyperspace.${{ inputs.version }}-Linux-Windows.zip` (also includes Windows)
+            - **macOS Only**: Download `FTL.Hyperspace.${{ inputs.version }}-MacOS.zip`
+
+            Platform-specific builds will be uploaded automatically. Please wait for all builds to complete before publishing.
