@@ -48,3 +48,31 @@ jobs:
             - **macOS Only**: Download `FTL.Hyperspace.${{ inputs.version }}-MacOS.zip`
 
             Platform-specific builds will be uploaded automatically. Please wait for all builds to complete before publishing.
+
+      - name: Trigger Linux/Windows Build
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'release-linux-windows.yml',
+              ref: 'master',
+              inputs: {
+                tag: 'v${{ inputs.version }}'
+              }
+            });
+
+      - name: Trigger macOS Build
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'release-macos.yml',
+              ref: 'master',
+              inputs: {
+                tag: 'v${{ inputs.version }}'
+              }
+            });
