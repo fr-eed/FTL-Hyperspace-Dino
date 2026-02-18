@@ -406,8 +406,16 @@ std::vector<StoreBox*> StoreComplete::CreateCustomStoreBoxes(const StoreCategory
 
                 if (bp)
                 {
-                    box = new WeaponStoreBox(ship, equip, bp);
+                    //box = new WeaponStoreBox(ship, equip, bp);
+                    WeaponStoreBox* box = (WeaponStoreBox*)orig->vStoreBoxes.back();
+                    orig->vStoreBoxes.pop_back();
 
+                    // Update it with our chosen blueprint
+                    box->pBlueprint = (Blueprint*)bp;
+                    box->blueprint = (WeaponBlueprint*)bp;
+
+                    // Copy the new blueprint's description
+                    box->desc = bp->desc;
                     box->desc.cost = GetItemPricing(i.price, bp->desc.cost, orig->worldLevel);
 
                     vec.push_back(box);
@@ -1599,6 +1607,12 @@ void StoreComplete::LoadStore(int file, int worldLevel)
 
                 std::vector<CustomStoreBox*> boxSec = std::vector<CustomStoreBox*>();
 
+                // Pre-create boxes once for weapons
+                if (sec.category == CategoryType::WEAPONS && boxCount > 0)
+                {
+                    orig->CreateStoreBoxes(0, nullptr);
+                }
+
                 for (int boxNum = 0; boxNum < boxCount; boxNum++)
                 {
                     int count = FileHelper::readInteger(file);
@@ -1615,9 +1629,22 @@ void StoreComplete::LoadStore(int file, int worldLevel)
                     switch (sec.category)
                     {
                     case CategoryType::WEAPONS:
+                    {
+                        // Steal from pre-created boxes
+                        WeaponStoreBox* weaponBox = (WeaponStoreBox*)orig->vStoreBoxes.back();
+                        orig->vStoreBoxes.pop_back();
 
-                        box->orig = new WeaponStoreBox(nullptr, nullptr, G_->GetBlueprints()->GetWeaponBlueprint(blueprintName));
+                        // Update with loaded blueprint
+                        WeaponBlueprint* bp = G_->GetBlueprints()->GetWeaponBlueprint(blueprintName);
+                        weaponBox->pBlueprint = (Blueprint*)bp;
+                        weaponBox->blueprint = bp;
+
+                        // Copy the blueprint's description
+                        weaponBox->desc = bp->desc;
+
+                        box->orig = weaponBox;
                         break;
+                    }
                     case CategoryType::DRONES:
                         box->orig = new DroneStoreBox(nullptr, nullptr, G_->GetBlueprints()->GetDroneBlueprint(blueprintName));
                         break;
