@@ -60,7 +60,7 @@ void removeItbButtonFromRenderTargets(MainMenu &mainMenu)
 }
 #endif
 
-HOOK_METHOD(MainMenu, Open, () -> bool)
+HOOK_METHOD(MainMenu, Open, () -> void)
 {
     LOG_HOOK("HOOK_METHOD -> MainMenu::Open -> Begin (MainMenu.cpp)\n")
 #ifndef __linux__
@@ -96,7 +96,7 @@ HOOK_METHOD(MainMenu, Open, () -> bool)
         }
     }
 
-    return super();
+    super();
 }
 
 /* Rewrote this to debug the crash, leaving this in in case someone needs this in the future

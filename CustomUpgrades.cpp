@@ -724,7 +724,7 @@ HOOK_METHOD(InfoBox, SetSystem, (ShipSystem *system, int upgrade, int yShift, in
     g_currentShipSystem = nullptr;
 }
 // called within InfoBox::SetSystem
-HOOK_METHOD(InfoBox, CalcBoxHeight, () -> int)
+HOOK_METHOD(InfoBox, CalcBoxHeight, () -> void)
 {
     LOG_HOOK("HOOK_METHOD -> InfoBox::CalcBoxHeight -> Begin (CustomUpgrades.cpp)\n")
     if (systemId == SYS_ARTILLERY && g_currentShipSystem)
@@ -732,7 +732,7 @@ HOOK_METHOD(InfoBox, CalcBoxHeight, () -> int)
         WeaponBlueprint *bp = g_currentShipSystem->GetWeaponInfo();
         if (bp) desc.description = bp->desc.description;
     }
-    return super();
+    super();
 }
 
 // prevent infoBox from rendering outside the screen when the description is too long

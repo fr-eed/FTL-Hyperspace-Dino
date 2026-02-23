@@ -1406,13 +1406,13 @@ void StoreComplete::MouseMove(int x, int y)
     rightButton->MouseMove(x, y, false);
 }
 
-HOOK_METHOD(Store, KeyDown, (SDLKey key) -> bool)
+HOOK_METHOD(Store, KeyDown, (SDLKey key) -> void)
 {
     LOG_HOOK("HOOK_METHOD -> Store::KeyDown -> Begin (CustomStore.cpp)\n")
     if (STORE_EX(this)->isCustomStore)
     {
         STORE_EX(this)->customStore->KeyDown(key);
-        return false; // Only returns true when closing I think
+        return;
     }
 
     return super(key);
@@ -2065,15 +2065,14 @@ HOOK_METHOD(SystemStoreBox, SetInfoBox, (InfoBox *box, int forceSystemInfoWidth)
     return ret;
 }
 // called within SystemStoreBox::SetInfoBox
-HOOK_METHOD(InfoBox, CalcBoxHeight, () -> int)
+HOOK_METHOD(InfoBox, CalcBoxHeight, () -> void)
 {
     LOG_HOOK("HOOK_METHOD -> InfoBox::CalcBoxHeight -> Begin (CustomStore.cpp)\n")
     if (systemId == SYS_ARTILLERY && g_currentArtilleryBP)
     {
         desc = g_currentArtilleryBP->desc;
     }
-
-    return super();
+    super();
 }
 
 // replace dummy artillery system title with actual title

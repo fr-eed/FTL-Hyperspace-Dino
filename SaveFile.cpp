@@ -328,10 +328,10 @@ HOOK_METHOD(MainMenu, constructor, () -> void)
     confirmWipeSave = new ConfirmWindow();
 }
 
-HOOK_METHOD(MainMenu, Open, () -> bool)
+HOOK_METHOD(MainMenu, Open, () -> void)
 {
     LOG_HOOK("HOOK_METHOD -> MainMenu::Open -> Begin (SaveFile.cpp)\n")
-    bool ret = super();
+    super();
     /*
     std::string text = G_->GetTextLibrary()->GetText("transfer_save_dialog");
     auto printLines = freetype::easy_measurePrintLines(52, 0, 0, 400, text);
@@ -390,8 +390,6 @@ HOOK_METHOD(MainMenu, Open, () -> bool)
     }
 
     welcomeDialogOpen = true;
-
-    return ret;
 }
 
 HOOK_METHOD(MainMenu, OnRender, () -> void)

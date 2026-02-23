@@ -1236,12 +1236,13 @@ HOOK_METHOD(CrewMember, DirectModifyHealth, (float healthMod) -> bool)
 }
 */
 
-HOOK_METHOD(CrewMember, UpdateHealth, () -> void)
+HOOK_METHOD(CrewMember, UpdateHealth, () -> bool)
 {
     LOG_HOOK("HOOK_METHOD -> CrewMember::UpdateHealth -> Begin (TemporalSystem.cpp)\n")
     g_inUpdateHealth = true;
-    super();
+    auto ret = super();
     g_inUpdateHealth = false;
+    return ret;
 }
 
 HOOK_METHOD(CrewMember, ApplyDamage, (float damage) -> bool)
