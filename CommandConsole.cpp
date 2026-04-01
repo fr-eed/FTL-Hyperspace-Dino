@@ -2,6 +2,7 @@
 #include "ShipUnlocks.h"
 #include "CustomStore.h"
 #include "CustomOptions.h"
+#include "src/features/ship-bounce/ShipBounce.h"
 #include "CustomEvents.h"
 #include "CustomScoreKeeper.h"
 #include "CustomSystems.h"
@@ -391,6 +392,11 @@ bool CommandConsole::RunCommand(CommandGui *commandGui, const std::string& cmd)
             commandGui->equipScreen.AddWeapon(weapon, true, false);
         }
 
+        return true;
+    }
+    if (cmdName == "BOUNCE")
+    {
+        ShipBounce::Toggle();
         return true;
     }
 
